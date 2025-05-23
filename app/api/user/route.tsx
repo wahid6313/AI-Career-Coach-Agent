@@ -1,31 +1,43 @@
-
 import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/configs/db";
 import { usersTable } from "@/configs/schema";
+import { currentUser } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
-    const { userEmail, userName } = await req.json();
+    try {
+        const user = await currentUser();
 
-    // try {
-    const result = await db.select().from(usersTable)
-        .where(eq(usersTable.email, userEmail));
+        if (!user || !user.primaryEmailAddress?.emailAddress) {
+            return NextResponse.json(
+                { error: "Unauthorized or missing email address" },
+                { status: 401 }
+            );
+        }
 
-    if (result?.length == 0) {
+        const email = user.primaryEmailAddress.emailAddress;
 
-        const result: any = await db.insert(usersTable).values({
-            name: userName,
-            email: userEmail,
-            credits: 0,
-            // @ts-ignore
-        }).returning(usersTable);
+        // Check if user already exists
+        const existingUsers = await db
+            .select()
+            .from(usersTable)
+            .where(eq(usersTable.email, email));
 
-        return NextResponse.json(result[0]);
+        if (existingUsers.length > 0) {
+            return NextResponse.json(existingUsers[0]);
+        }
+
+        // Insert new user
+        const insertedUsers = await db
+            .insert(usersTable)
+            .values({
+                name: user.fullName ?? "",
+                email: email,
+            })
+            .returning();
+
+        return NextResponse.json(insertedUsers[0]);
+    } catch (e: any) {
+        return NextResponse.json({ error: e.message || "Server error" }, { status: 500 });
     }
-    return NextResponse.json(result[0]);
-
-
-    // } catch (e) {
-    //     return NextResponse.json(e)
-    // }
 }

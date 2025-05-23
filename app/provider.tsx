@@ -1,39 +1,34 @@
 "use client"
-import { auth } from '@/configs/firebaseConfig';
 import { AuthContext } from '@/context/AuthContext';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { useUser } from '@clerk/nextjs';
+import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react'
 
-interface AuthContextType {
-    user: User | null;
-}
 
 function Provider({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const [user, setUser] = useState<User | null>(null);
 
+    const { user } = useUser();
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-        });
+        user && createNewUser();
+    }, [user]);
 
-        return () => unsubscribe(); // Cleanup
-    }, []);
+    const createNewUser = async () => {
+        const result = await axios.post('/api/user');
+    }
 
     return (
-        <AuthContext.Provider value={{ user }}>
-            <div>
-                {children}
-            </div>
-        </AuthContext.Provider>
+        <div>
+            {children}
+        </div>
     )
 }
 
 // Custom hook to use auth
-export const useAuthContext = (): AuthContextType => {
+export const useAuthContext = () => {
     const context = useContext(AuthContext);
     if (!context) throw new Error("useAuth must be used within an AuthProvider");
     return context;
