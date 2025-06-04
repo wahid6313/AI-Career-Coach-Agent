@@ -5,6 +5,8 @@ import {
   ClerkProvider,
 } from '@clerk/nextjs'
 import Provider from "./Provider";
+
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
