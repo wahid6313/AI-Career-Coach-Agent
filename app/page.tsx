@@ -4,8 +4,7 @@ import Image from "next/image";
 import { SignIn, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 
 export default function Home() {
-  // const user = useAuthContext();
-  // console.log(user?.user)
+
 
   const { user } = useUser();
 
