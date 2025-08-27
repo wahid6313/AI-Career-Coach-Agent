@@ -14,11 +14,12 @@ import {
 import { Calendar, Home, Inbox, Layers, Search, Settings, UserCircle, Wallet } from "lucide-react"
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 
 const items = [
     {
         title: "Workspace",
-        url: "#",
+        url: "/dashboard",
         icon: Layers,
     },
     {
@@ -28,7 +29,7 @@ const items = [
     },
     {
         title: "History",
-        url: "#",
+        url: "/history",
         icon: Calendar,
     },
     {
@@ -38,7 +39,7 @@ const items = [
     },
     {
         title: "Profile",
-        url: "#",
+        url: "/profile",
         icon: UserCircle,
     },
 ]
@@ -62,11 +63,11 @@ export function AppSidebar() {
                             {items.map((item, index) => (
                                 // <SidebarMenuItem key={item.title} className='p-2'>
                                 //     <SidebarMenuButton asChild className=''>
-                                <a href={item.url} key={index} className={`p-2 text-lg flex gap-2 items-center
+                                <Link href={item.url} key={index} className={`p-2 text-lg flex gap-2 items-center
                                  hover:bg-gray-100 rounded-lg ${path.includes(item.url) && 'bg-gray-200ß'}`}>
                                     <item.icon className='h-5 w-5' />
                                     <span>{item.title}</span>
-                                </a>
+                                </Link>
                                 //     </SidebarMenuButton>
                                 // </SidebarMenuItem>
                             ))}
@@ -75,7 +76,7 @@ export function AppSidebar() {
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>
-                <h2 className='p-2 text-gray-400 text-sm'>Copyright @Tubeguruji</h2>
+                <h2 className='p-2 text-gray-400 text-sm'>Copyright @WahidAli</h2>
             </SidebarFooter>
         </Sidebar>
     )
