@@ -17,7 +17,7 @@ function Provider({
     }, [user]);
 
     const createNewUser = async () => {
-        const result = await axios.post('/api/user');
+        let result = await axios.post('/api/user');
     }
 
     return (
@@ -30,4 +30,3 @@ function Provider({
 
 
 export default Provider
-
